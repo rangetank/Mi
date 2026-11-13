@@ -5,194 +5,376 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
-<title>My Monero Mining Center</title>
+<title>Monero Mining Center</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:16px;background:#111827;color:white;
-font-family:Arial,sans-serif}
-main{max-width:540px;margin:auto}
+
+body{
+ margin:0;
+ padding:16px;
+ background:#111827;
+ color:white;
+ font-family:Arial,sans-serif
+}
+
+main{max-width:550px;margin:auto}
+
 h1{color:#f5a623}
-.card{background:#202b40;padding:18px;border-radius:14px;margin:14px 0}
-input{width:100%;padding:13px;margin:8px 0;
-background:#111827;color:white;border:1px solid #526078;border-radius:8px}
-button{width:100%;padding:14px;border:0;border-radius:9px;
-background:#f5a623;font-weight:bold;margin:7px 0;cursor:pointer}
-.secondary{background:#394762;color:white}
-.small{font-size:13px;color:#aab6c9;overflow-wrap:anywhere}
-.value{font-size:19px;color:#80e0b0;overflow-wrap:anywhere}
+h3{color:#f5a623}
+
+.card{
+ background:#202b40;
+ padding:18px;
+ border-radius:14px;
+ margin:14px 0
+}
+
+input{
+ width:100%;
+ padding:13px;
+ margin:8px 0;
+ background:#111827;
+ color:white;
+ border:1px solid #526078;
+ border-radius:8px
+}
+
+button{
+ width:100%;
+ padding:14px;
+ border:0;
+ border-radius:9px;
+ background:#f5a623;
+ font-weight:bold;
+ margin:7px 0;
+ cursor:pointer
+}
+
+.secondary{
+ background:#394762;
+ color:white
+}
+
+.small{
+ font-size:13px;
+ color:#aab6c9;
+ overflow-wrap:anywhere
+}
+
+.value{
+ font-size:17px;
+ color:#80e0b0;
+ overflow-wrap:anywhere
+}
+
 .status{color:#f5a623}
+
+pre{
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ background:#111827;
+ padding:12px;
+ border-radius:8px;
+ font-size:12px
+}
+
+a{color:#f5a623}
+
 </style>
 </head>
+
 <body>
 <main>
 
 <h1>Monero Mining Center</h1>
-<p class="small">Samsung Galaxy A16 | XMR mining setup</p>
+<p class="small">
+XMR Mining Dashboard | Android Edition
+</p>
 
 <div class="card">
-<h3>1. Create your Monero wallet</h3>
-<p class="small">Install Cake Wallet and create a new Monero wallet.</p>
-<button onclick="openPage('https://cakewallet.com/')">
-OPEN CAKE WALLET
+<h3>1. Your Monero Wallet</h3>
+
+<input id="wallet"
+value="49E9337Cnqh38Zv6H8K6C93MCEVhyZELZ175v8XY6q1BceZJDSW9YLAGSZbtJxDva94KJsWFGqjo4Q3mcN2hAR9ZFPT5bJ7">
+
+<button onclick="copyWallet()">
+COPY XMR WALLET
 </button>
-<p class="small">Never enter your recovery words into this page.</p>
+
+<p id="walletStatus" class="small">
+Your receiving address is preloaded.
+</p>
+
 </div>
 
 <div class="card">
-<h3>2. Your Monero receiving address</h3>
-<input id="wallet" placeholder="Paste your public XMR address">
-<button onclick="saveWallet()">SAVE WALLET ADDRESS</button>
-<button class="secondary" onclick="copyWallet()">COPY WALLET ADDRESS</button>
-<p id="walletStatus" class="small">No wallet address saved.</p>
-</div>
+<h3>2. Mining Pool</h3>
 
-<div class="card">
-<h3>3. Mining software</h3>
-<button onclick="openPage('https://github.com/XMRig-for-Android/xmrig-for-android')">
-VIEW XMRIG ANDROID PROJECT
-</button>
-<button class="secondary" onclick="openPage('https://xmrig.com/docs/miner/config/pool')">
-XMRIG CONFIGURATION GUIDE
-</button>
-<p class="small">Install only trusted software and verify the publisher.</p>
-</div>
+<label>Pool hostname</label>
+<input id="pool"
+placeholder="Enter your chosen pool hostname">
 
-<div class="card">
-<h3>4. Mining configuration</h3>
-<label>Monero pool address</label>
-<input id="pool" placeholder="Pool hostname">
 <label>Pool port</label>
-<input id="port" placeholder="Pool port">
+<input id="port"
+placeholder="Enter pool port">
+
 <label>Worker name</label>
 <input id="worker" value="GalaxyA16">
 
-<button onclick="makeConfig()">PREPARE CONFIGURATION</button>
-<pre id="config" class="small"></pre>
-<button class="secondary" onclick="copyConfig()">COPY CONFIGURATION</button>
-<p class="small">Enter these settings in a compatible XMRig application.
-This page does not start the miner.</p>
-</div>
+<label>Pool password</label>
+<input id="password" value="x">
 
-<div class="card">
-<h3>5. Mining pool statistics</h3>
-<p class="small">Check your actual worker and earnings through your selected pool.</p>
-<button onclick="openPage('https://miningpoolstats.stream/monero')">
-FIND MONERO POOLS
+<label>Pool TLS</label>
+<select id="tls">
+<option value="false">Disabled</option>
+<option value="true">Enabled</option>
+</select>
+
+<button onclick="saveSettings()">
+SAVE POOL SETTINGS
 </button>
-<p>Actual hashrate</p>
-<div class="value">Check mining pool</div>
-<p>Accepted shares</p>
-<div class="value">Check mining pool</div>
-<p>Actual XMR balance</p>
-<div class="value">Check mining pool</div>
-</div>
 
-<div class="card">
-<h3>6. Convert Monero to Bitcoin</h3>
-<p class="small">Your Bitcoin receiving address:</p>
-<p class="value" id="btc">
-bc1qtj2ks6ys9nt0hgmksj9axdaev79cjuflmg6qqe
-</p>
-<button onclick="copyBTC()">COPY BTC ADDRESS</button>
-<button class="secondary" onclick="openPage('https://cakewallet.com/')">
-OPEN CAKE WALLET
+<button class="secondary"
+onclick="window.open('https://miningpoolstats.stream/monero','_blank')">
+FIND MONERO MINING POOLS
 </button>
-<p class="small">Conversion and withdrawals require a supported
-exchange service and are not automatic through this page.</p>
-</div>
 
-<div class="card">
-<h3>Security</h3>
 <p class="small">
-Never share your recovery phrase or private keys.
-Keep your phone cool. Start with low CPU usage.
-Check pool fees and minimum payouts before mining.
+Choose a RandomX-compatible Monero pool.
+Check its payout threshold, fees and port.
+</p>
+</div>
+
+<div class="card">
+<h3>3. Generate Mining Configuration</h3>
+
+<button onclick="makeConfig()">
+GENERATE XMRIG CONFIGURATION
+</button>
+
+<pre id="config">Your configuration will appear here.</pre>
+
+<button class="secondary" onclick="copyConfig()">
+COPY MINING CONFIGURATION
+</button>
+
+<p class="small">
+Use this configuration with a trusted,
+compatible XMRig installation.
+</p>
+</div>
+
+<div class="card">
+<h3>4. Install Mining Software</h3>
+
+<p class="small">
+The actual mining engine must run separately.
+This dashboard does not mine in the browser.
+</p>
+
+<button onclick="window.open(
+'https://github.com/xmrig/xmrig',
+'_blank')">
+OFFICIAL XMRIG PROJECT
+</button>
+
+<button class="secondary" onclick="window.open(
+'https://xmrig.com/docs/miner',
+'_blank')">
+XMRIG DOCUMENTATION
+</button>
+</div>
+
+<div class="card">
+<h3>5. Mining Statistics</h3>
+
+<p class="small">Hashrate</p>
+<div class="value">Check your pool dashboard</div>
+
+<p class="small">Accepted shares</p>
+<div class="value">Check your pool dashboard</div>
+
+<p class="small">Pending XMR</p>
+<div class="value">Check your pool dashboard</div>
+
+<p class="small">Paid XMR</p>
+<div class="value">Check your wallet</div>
+
+<button onclick="window.open(
+'https://miningpoolstats.stream/monero',
+'_blank')">
+VIEW POOL STATISTICS
+</button>
+</div>
+
+<div class="card">
+<h3>6. Mining Safety</h3>
+
+<p class="small">
+- Monitor CPU temperature.
+- Avoid excessive CPU usage.
+- Keep your phone ventilated.
+- Stop mining if the device overheats.
+- Never enter your wallet recovery phrase here.
+- Never share your private keys.
+</p>
+</div>
+
+<div class="card">
+<h3>7. Configuration Backup</h3>
+
+<button onclick="saveSettings()">
+SAVE SETTINGS
+</button>
+
+<button class="secondary" onclick="downloadConfig()">
+DOWNLOAD CONFIG.JSON
+</button>
+
+<p class="small">
+Your configuration contains your public wallet
+address and pool settings. Keep it private if
+you add any sensitive information.
 </p>
 </div>
 
 </main>
 
 <script>
-function openPage(url){
- window.open(url,'_blank');
-}
 
-function saveWallet(){
- const w=document.getElementById('wallet').value.trim();
+const $ = id => document.getElementById(id);
 
- if(!/^(4|8)[1-9A-HJ-NP-Za-km-z]{90,}$/.test(w)){
-   alert('Please enter a valid-looking Monero mainnet address.');
-   return;
- }
-
- try{
-   localStorage.setItem('publicXMRWallet',w);
-   document.getElementById('walletStatus').innerText=
-   'Public wallet address saved in this browser.';
- }catch(e){
-   alert('Browser storage unavailable. Keep your address separately.');
+function copy(text){
+ if(navigator.clipboard){
+  navigator.clipboard.writeText(text);
+ }else{
+  const t=document.createElement("textarea");
+  t.value=text;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand("copy");
+  t.remove();
  }
 }
 
 function copyWallet(){
- const w=document.getElementById('wallet').value;
- if(!w){alert('Enter your wallet address first');return;}
- navigator.clipboard.writeText(w);
+ copy($("wallet").value.trim());
+ $("walletStatus").textContent="Wallet address copied.";
 }
 
-function copyBTC(){
- const w=document.getElementById('btc').innerText.trim();
- navigator.clipboard.writeText(w);
+function saveSettings(){
+ const data={
+  wallet:$("wallet").value.trim(),
+  pool:$("pool").value.trim(),
+  port:$("port").value.trim(),
+  worker:$("worker").value.trim(),
+  password:$("password").value,
+  tls:$("tls").value
+ };
+
+ localStorage.setItem("xmrSettings",JSON.stringify(data));
+
+ alert("Settings saved successfully.");
+}
+
+function loadSettings(){
+ try{
+  const data=JSON.parse(
+   localStorage.getItem("xmrSettings")||"{}"
+  );
+
+  if(data.wallet)$("wallet").value=data.wallet;
+  if(data.pool)$("pool").value=data.pool;
+  if(data.port)$("port").value=data.port;
+  if(data.worker)$("worker").value=data.worker;
+  if(data.password)$("password").value=data.password;
+  if(data.tls)$("tls").value=data.tls;
+ }catch(e){}
 }
 
 function makeConfig(){
- const wallet=document.getElementById('wallet').value.trim();
- const pool=document.getElementById('pool').value.trim();
- const port=document.getElementById('port').value.trim();
- const worker=document.getElementById('worker').value.trim();
 
- if(!wallet||!pool||!port){
-   alert('Enter your XMR wallet, pool hostname and port.');
-   return;
+ const wallet=$("wallet").value.trim();
+ const pool=$("pool").value.trim();
+ const port=$("port").value.trim();
+ const worker=$("worker").value.trim();
+
+ if(!wallet || !pool || !port){
+  alert("Enter your wallet, pool hostname and port.");
+  return;
+ }
+
+ if(!/^(4|8)[1-9A-HJ-NP-Za-km-z]{90,}$/.test(wallet)){
+  alert("Check your Monero wallet address.");
+  return;
+ }
+
+ if(!/^\d{1,5}$/.test(port) ||
+    Number(port)<1 || Number(port)>65535){
+  alert("Enter a valid pool port.");
+  return;
  }
 
  const config={
-   autosave:true,
-   cpu:{
-     enabled:true,
-     huge-pages:false,
-     priority:1
-   },
-   pools:[{
-     coin:"monero",
-     algo:"rx/0",
-     url:pool+":"+port,
-     user:wallet,
-     pass:worker,
-     keepalive:true,
-     tls:false
-   }]
+  autosave:true,
+  cpu:{
+   enabled:true,
+   huge-pages:false,
+   priority:1
+  },
+  pools:[{
+   coin:"monero",
+   algo:"rx/0",
+   url:pool+":"+port,
+   user:wallet,
+   pass:worker+":"+$("password").value,
+   keepalive:true,
+   tls:$("tls").value==="true"
+  }]
  };
 
- document.getElementById('config').textContent=
+ window.generatedConfig=config;
+
+ $("config").textContent=
  JSON.stringify(config,null,2);
+
 }
 
 function copyConfig(){
- const c=document.getElementById('config').textContent;
- if(!c){alert('Prepare configuration first');return;}
- navigator.clipboard.writeText(c);
+ if(!window.generatedConfig){
+  alert("Generate the configuration first.");
+  return;
+ }
+
+ copy(JSON.stringify(window.generatedConfig,null,2));
+ alert("Configuration copied.");
 }
 
-try{
- const saved=localStorage.getItem('publicXMRWallet');
- if(saved){
-   document.getElementById('wallet').value=saved;
-   document.getElementById('walletStatus').innerText=
-   'Saved public wallet address loaded.';
+function downloadConfig(){
+ if(!window.generatedConfig){
+  makeConfig();
  }
-}catch(e){}
+
+ if(!window.generatedConfig)return;
+
+ const blob=new Blob(
+  [JSON.stringify(window.generatedConfig,null,2)],
+  {type:"application/json"}
+ );
+
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download="config.json";
+ a.click();
+
+ URL.revokeObjectURL(url);
+}
+
+loadSettings();
+
 </script>
 </body>
 </html>
-
